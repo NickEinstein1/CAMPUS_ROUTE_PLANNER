@@ -1,0 +1,233 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #f4f6f8;
+  color: #1a1a2e;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+.header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0 0 1.25rem;
+  color: #5c6370;
+  font-size: 0.9rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.control-group label,
+.closure-bar label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5c6370;
+}
+
+select {
+  min-width: 160px;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #c8cdd4;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.95rem;
+}
+
+.arrow {
+  font-size: 1.25rem;
+  color: #888;
+  padding-bottom: 0.5rem;
+}
+
+#find-route-btn {
+  padding: 0.55rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#find-route-btn:hover {
+  background: #1d4ed8;
+}
+
+.closure-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.closure-bar select {
+  max-width: 320px;
+}
+
+.map-container {
+  background: #fff;
+  border: 1px solid #dde1e6;
+  border-radius: 10px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+#campus-map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-hint {
+  margin: 0.5rem 0.25rem 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.edge {
+  stroke: #b0b8c4;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+.edge.closed {
+  stroke: #fca5a5;
+  stroke-dasharray: 8 6;
+  opacity: 0.6;
+}
+
+.edge.route {
+  stroke: #1e3a8a;
+  stroke-width: 6;
+}
+
+.node-intersection {
+  fill: #9ca3af;
+}
+
+.node-location {
+  fill: #86efac;
+  stroke: #22c55e;
+  stroke-width: 2;
+  cursor: pointer;
+  transition: fill 0.15s;
+}
+
+.node-location:hover {
+  fill: #4ade80;
+}
+
+.node-location.selected-from {
+  stroke: #2563eb;
+  stroke-width: 3;
+}
+
+.node-location.selected-to {
+  stroke: #dc2626;
+  stroke-width: 3;
+}
+
+.node-label {
+  font-size: 13px;
+  font-weight: 600;
+  fill: #1f2937;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 120px;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5c6370;
+}
+
+.result-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.result-value.algorithm {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.output-panel {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.output-panel h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+#console-output {
+  margin: 0;
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.error-text {
+  color: #fca5a5;
+}
+
+.success-text {
+  color: #86efac;
+}

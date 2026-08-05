@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Route Planner — Dijkstra</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Campus Route Planner</h1>
+      <p class="subtitle">Shortest path with Dijkstra's algorithm &amp; priority queue</p>
+    </header>
+
+    <section class="controls">
+      <div class="control-group">
+        <label for="from-select">From</label>
+        <select id="from-select" aria-label="Start location"></select>
+      </div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="control-group">
+        <label for="to-select">To</label>
+        <select id="to-select" aria-label="End location"></select>
+      </div>
+      <button id="find-route-btn" type="button">Find route</button>
+    </section>
+
+    <section class="closure-bar">
+      <label for="closure-select">Road closures</label>
+      <select id="closure-select" aria-label="Simulated road closures"></select>
+    </section>
+
+    <div class="map-container">
+      <svg id="campus-map" viewBox="0 0 640 420" role="img" aria-label="Campus map graph">
+        <g id="edges-layer"></g>
+        <g id="route-layer"></g>
+        <g id="nodes-layer"></g>
+      </svg>
+      <p class="map-hint">Click two locations on the map to set From / To, then click Find route.</p>
+    </div>
+
+    <section class="results" id="results" hidden>
+      <div class="result-card">
+        <span class="result-label">Distance</span>
+        <span class="result-value" id="distance-value">—</span>
+      </div>
+      <div class="result-card">
+        <span class="result-label">Estimated walk</span>
+        <span class="result-value" id="walk-value">—</span>
+      </div>
+      <div class="result-card">
+        <span class="result-label">Algorithm</span>
+        <span class="result-value algorithm">Dijkstra, priority queue</span>
+      </div>
+    </section>
+
+    <section class="output-panel">
+      <h2>Output</h2>
+      <pre id="console-output">Select start and end, then click Find route.</pre>
+    </section>
+  </div>
+
+  <script src="js/graph.js"></script>
+  <script src="js/priorityQueue.js"></script>
+  <script src="js/dijkstra.js"></script>
+  <script src="js/mapData.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
