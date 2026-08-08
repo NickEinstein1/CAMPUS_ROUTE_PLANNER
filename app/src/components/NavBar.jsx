@@ -4,6 +4,7 @@ import {
   SunIcon,
   MoonIcon,
   BookIcon,
+  TerminalIcon,
 } from './icons'
 
 /**
@@ -19,6 +20,8 @@ export default function NavBar({
   notesOpen,
   onToggleNotes,
   onOpenGuide,
+  consoleOpen,
+  onToggleConsole,
 }) {
   return (
     <nav className="nav">
@@ -40,6 +43,15 @@ export default function NavBar({
           title="Full guide: data structures, algorithm, storage"
         >
           Guide
+        </button>
+        <button
+          type="button"
+          className={`icon-btn${consoleOpen ? ' is-active' : ''}`}
+          onClick={onToggleConsole}
+          aria-pressed={consoleOpen}
+          title="Algorithm output"
+        >
+          <TerminalIcon />
         </button>
         <button
           type="button"

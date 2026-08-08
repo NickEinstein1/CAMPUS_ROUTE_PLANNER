@@ -95,6 +95,25 @@ export const BookIcon = () => (
   </Svg>
 )
 
+export const TerminalIcon = () => (
+  <Svg>
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="m7 9 3 3-3 3M13 15h4" />
+  </Svg>
+)
+
+export const MinimiseIcon = () => (
+  <Svg>
+    <path d="M5 12h14" />
+  </Svg>
+)
+
+export const RestoreIcon = () => (
+  <Svg>
+    <path d="m8 14 4-4 4 4" />
+  </Svg>
+)
+
 export const CloseIcon = () => (
   <Svg>
     <path d="m6 6 12 12M18 6 6 18" />

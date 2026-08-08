@@ -3,6 +3,7 @@ import MapView from './components/MapView'
 import MapControls from './components/MapControls'
 import ControlPanel from './components/ControlPanel'
 import ResultsPanel from './components/ResultsPanel'
+import ConsolePanel from './components/ConsolePanel'
 import NavBar from './components/NavBar'
 import Legend from './components/Legend'
 import InfoPanel from './components/InfoPanel'
@@ -26,6 +27,19 @@ import './App.css'
 const START_DEFAULT = 'library'
 const END_DEFAULT = 'gymnasium'
 
+/** "2 under construction, 1 closed" — for the console output. */
+function describeDisruptions(counts) {
+  return (
+    [
+      counts.maintenance && `${counts.maintenance} under maintenance`,
+      counts.construction && `${counts.construction} under construction`,
+      counts.closed && `${counts.closed} closed`,
+    ]
+      .filter(Boolean)
+      .join(', ') || 'none'
+  )
+}
+
 export default function App() {
   const [theme, toggleTheme] = useTheme()
   const [fromId, setFromId] = useState(START_DEFAULT)
@@ -41,6 +55,9 @@ export default function App() {
   const [map, setMap] = useState(null)
   const [infoOpen, setInfoOpen] = useState(false)
   const [notesOpen, setNotesOpen] = useState(false)
+  /** Shown by default: the brief asks for this output. Minimise or hide it. */
+  const [consoleOpen, setConsoleOpen] = useState(true)
+  const [consoleMin, setConsoleMin] = useState(false)
   /** The guide is a full page behind #guide, so it can be linked and shared. */
   const [guideOpen, setGuideOpen] = useState(
     () => window.location.hash.startsWith('#guide'),
@@ -56,26 +73,25 @@ export default function App() {
   const result = useMemo(() => {
     const endNodeId = landmarkById(toId).nodeId
 
+    // The exact wording the assignment brief specifies.
+    const headline =
+      `FINDING THE SHORTEST PATH FROM ${startLabel.toUpperCase()} ` +
+      `TO ${endLabel.toUpperCase()} USING DIJKSTRA'S ALGORITHM`
+
     if (startNodeId === endNodeId) {
-      return {
-        ok: false,
-        error: 'Start and destination are the same place.',
-        edgeIds: [],
-      }
+      const error = 'Start and destination are the same place.'
+      return { ok: false, error, headline, body: error, edgeIds: [] }
     }
 
     const factors = toFactors(disruptions)
     const found = dijkstra(graph, startNodeId, endNodeId, factors)
 
     if (!found) {
-      return {
-        ok: false,
-        error:
-          closedCount > 0
-            ? `No route — the ${closedCount} closure(s) in effect cut the destination off entirely. Downgrade one to construction and it becomes reachable again, just expensive.`
-            : 'No route — these points are not connected on the walkable network.',
-        edgeIds: [],
-      }
+      const error =
+        closedCount > 0
+          ? `No route — the ${closedCount} closure(s) in effect cut the destination off entirely. Downgrade one to construction and it becomes reachable again, just expensive.`
+          : 'No route — these points are not connected on the walkable network.'
+      return { ok: false, error, headline, body: error, edgeIds: [] }
     }
 
     // The same search with a clear campus, so we can price the disruption.
@@ -104,11 +120,33 @@ export default function App() {
       notes.push(`Start snapped ${Math.round(currentPos.snapM)} m to the network`)
     }
 
+    const distance = Math.round(found.metres)
+
+    // Rebuilt to the brief's sample layout, with the disruption lines added
+    // only when they apply.
+    const body =
+      `Route: ${startLabel} → (${Math.max(0, found.path.length - 2)} waypoints) → ${endLabel}\n` +
+      `Distance: ${distance} m\n` +
+      `Estimated walk: ${minutes} min\n` +
+      `Nodes settled: ${found.settled.length} of ${meta.nodes}\n` +
+      `Stale queue entries discarded: ${found.stale}\n` +
+      `Algorithm: Dijkstra with min-heap priority queue` +
+      (factors.size > 0
+        ? `\n\nDisruptions in effect: ${describeDisruptions(counts)}.\n` +
+          `Detour versus a clear campus: ${distance - Math.round(clear.metres)} m, ` +
+          `${minutes - clearMinutes} min.`
+        : '') +
+      (currentPos
+        ? `\n\nStart snapped ${Math.round(currentPos.snapM)} m to the nearest path.`
+        : '')
+
     return {
       ok: true,
+      headline,
+      body,
       from: startLabel,
       to: endLabel,
-      distance: Math.round(found.metres),
+      distance,
       minutes,
       settled: found.settled.length,
       stale: found.stale,
@@ -125,6 +163,7 @@ export default function App() {
     startNodeId,
     toId,
     disruptions,
+    counts,
     closedCount,
     startLabel,
     endLabel,
@@ -226,6 +265,12 @@ export default function App() {
         notesOpen={notesOpen}
         onToggleNotes={() => setNotesOpen((v) => !v)}
         onOpenGuide={openGuide}
+        consoleOpen={consoleOpen}
+        onToggleConsole={() => {
+          // Re-opening a panel the user hid should show it expanded.
+          if (!consoleOpen) setConsoleMin(false)
+          setConsoleOpen((v) => !v)
+        }}
       />
 
       <div className="body">
@@ -261,7 +306,19 @@ export default function App() {
         />
 
         <MapControls map={map} routePositions={routePositions} />
-        <ResultsPanel result={result} meta={meta} />
+
+        <div className="stack-bl">
+          {consoleOpen && (
+            <ConsolePanel
+              result={result}
+              minimised={consoleMin}
+              onToggleMinimise={() => setConsoleMin((v) => !v)}
+              onClose={() => setConsoleOpen(false)}
+            />
+          )}
+          <ResultsPanel result={result} meta={meta} />
+        </div>
+
         <Legend />
 
         {infoOpen && <InfoPanel onClose={() => setInfoOpen(false)} />}

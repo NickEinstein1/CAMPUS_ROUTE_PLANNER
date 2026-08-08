@@ -213,12 +213,87 @@ button.ghost:hover {
   gap: 2px;
 }
 
-/* ---------- Results (bottom-left) ---------- */
-.results {
-  bottom: 12px;
+/* ---------- Bottom-left stack: output above the result cards ---------- */
+.stack-bl {
+  position: absolute;
   left: 12px;
-  padding: 8px;
+  bottom: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   max-width: calc(100% - 24px);
+}
+
+.results {
+  padding: 8px;
+  max-width: 100%;
+}
+
+/* ---------- Console output (the format the brief specifies) ---------- */
+.console-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: min(560px, 100%);
+}
+
+.console-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 4px 3px 12px;
+}
+
+.console-panel.is-min .console-bar {
+  border-bottom: none;
+}
+
+.console-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text);
+}
+
+.console-actions {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.console-actions .icon-btn {
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+}
+
+.console {
+  margin: 0;
+  padding: 10px 14px 12px;
+  max-height: 30vh;
+  overflow: auto;
+  border-top: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.console-head {
+  color: #15803d;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .console-head {
+  color: #4ade80;
+}
+
+.console-head--error {
+  color: var(--danger);
 }
 
 .cards {
@@ -1059,10 +1134,19 @@ button.ghost:hover {
     display: none;
   }
 
-  .results {
-    left: 12px;
+  .stack-bl {
     right: 12px;
     max-width: none;
+  }
+
+  .results,
+  .console-panel {
+    width: 100%;
+    max-width: none;
+  }
+
+  .console {
+    max-height: 24vh;
   }
 
   .drawer.is-open,
