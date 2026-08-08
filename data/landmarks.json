@@ -1,0 +1,175 @@
+{
+  "_comment": "Campus landmarks. Footprint positions come from OpenStreetMap (real buildings at Jessup University, Rocklin). The NAMES are representative campus buildings chosen to match each footprint's size and position - they are not the actual Jessup building names. Rename freely - see _editing below.",
+  "_editing": {
+    "safeToEdit": [
+      "name",
+      "color"
+    ],
+    "doNotEdit": [
+      "id",
+      "lat",
+      "lon",
+      "osmWayId"
+    ],
+    "why": "Routing keys off 'id' and the graph node each landmark snaps to. 'name' and 'color' are display-only. Changing them needs no rebuild of the graph - though re-running scripts/build-graph.mjs will carry the new values into campus.json.",
+    "hintField": "'hint' describes each building's real position and size on campus, so you can match a name to the right physical building. Entries with an 'osmType'/'kind' field are real named or typed OSM features, not representative guesses."
+  },
+  "_source": {
+    "attribution": "Building footprints (c) OpenStreetMap contributors, ODbL 1.0",
+    "bbox": [
+      38.8168,
+      -121.2965,
+      38.8235,
+      -121.2888
+    ],
+    "retrieved": "2026-08-05",
+    "note": "11 building footprints are tagged building=yes with no name in OSM (ordered north to south). The 3 non-building places added later - Crossroads Cafe, Main Parking, Sports Field - DO carry their real OSM tags and names."
+  },
+  "landmarks": [
+    {
+      "id": "security-kiosk",
+      "osmWayId": 1299153828,
+      "name": "Security Kiosk",
+      "color": "#475569",
+      "lat": 38.820384,
+      "lon": -121.292084,
+      "areaM2": 110,
+      "hint": "Northernmost building. Very small (~110 m2) - fits a gatehouse or kiosk."
+    },
+    {
+      "id": "campus-store",
+      "osmWayId": 1304000098,
+      "name": "Campus Store",
+      "color": "#ea580c",
+      "lat": 38.820315,
+      "lon": -121.291891,
+      "areaM2": 193,
+      "hint": "North end, easternmost building on campus. Small (~193 m2)."
+    },
+    {
+      "id": "science-hall",
+      "osmWayId": 1299153821,
+      "name": "Science Hall",
+      "color": "#ca8a04",
+      "lat": 38.820151,
+      "lon": -121.292513,
+      "areaM2": 691,
+      "hint": "North cluster, west side. Medium (~691 m2)."
+    },
+    {
+      "id": "art-studio",
+      "osmWayId": 1299153823,
+      "name": "Art Studio",
+      "color": "#65a30d",
+      "lat": 38.820056,
+      "lon": -121.292081,
+      "areaM2": 381,
+      "hint": "North cluster, east side. Smaller (~381 m2)."
+    },
+    {
+      "id": "library",
+      "osmWayId": 1299153822,
+      "name": "Library",
+      "color": "#059669",
+      "lat": 38.819856,
+      "lon": -121.291994,
+      "areaM2": 1006,
+      "hint": "Central-east. Large (~1006 m2)."
+    },
+    {
+      "id": "biology-building",
+      "osmWayId": 1299153819,
+      "name": "Biology Building",
+      "color": "#0d9488",
+      "lat": 38.819733,
+      "lon": -121.292825,
+      "areaM2": 679,
+      "hint": "Central-west. Medium (~679 m2)."
+    },
+    {
+      "id": "student-center",
+      "osmWayId": 1299153820,
+      "name": "Student Center",
+      "color": "#0284c7",
+      "lat": 38.819631,
+      "lon": -121.292389,
+      "areaM2": 657,
+      "hint": "Dead centre of campus. Medium (~657 m2)."
+    },
+    {
+      "id": "administration",
+      "osmWayId": 48208060,
+      "name": "Administration",
+      "color": "#4f46e5",
+      "lat": 38.819346,
+      "lon": -121.293081,
+      "areaM2": 1350,
+      "hint": "Central-west, westernmost building. Large (~1350 m2). Oldest OSM record on campus."
+    },
+    {
+      "id": "lecture-halls",
+      "osmWayId": 1299153818,
+      "name": "Lecture Halls",
+      "color": "#92400e",
+      "lat": 38.819226,
+      "lon": -121.292663,
+      "areaM2": 1511,
+      "hint": "Largest footprint on campus (~1511 m2), south-central."
+    },
+    {
+      "id": "chapel",
+      "osmWayId": 1304000101,
+      "name": "Chapel",
+      "color": "#a21caf",
+      "lat": 38.819037,
+      "lon": -121.293007,
+      "areaM2": 218,
+      "hint": "South end of the main cluster, west side. Small (~218 m2)."
+    },
+    {
+      "id": "gymnasium",
+      "osmWayId": 477154431,
+      "name": "Gymnasium",
+      "color": "#be123c",
+      "lat": 38.816775,
+      "lon": -121.2929,
+      "areaM2": 549,
+      "hint": "Roughly 250 m south of the main cluster - the isolated position fits an athletics facility."
+    },
+    {
+      "id": "crossroads-cafe",
+      "osmType": "node",
+      "osmId": 14025265401,
+      "name": "Crossroads Cafe",
+      "color": "#e11d48",
+      "lat": 38.8210793,
+      "lon": -121.2930928,
+      "kind": "amenity=restaurant",
+      "hint": "REAL OSM name. Jessup dining, 2121 University Avenue. Mo-Fr 07:30-19:00, Sa-Su 10:30-18:30. North-west of the main cluster."
+    },
+    {
+      "id": "main-parking",
+      "osmType": "way",
+      "osmId": 37211512,
+      "name": "Main Parking",
+      "color": "#0891b2",
+      "lat": 38.820597,
+      "lon": -121.291784,
+      "kind": "amenity=parking",
+      "areaM2": 45357,
+      "hint": "REAL OSM feature. The large east lot (~4.5 ha) - by far the biggest area on campus. Position is the lot centroid."
+    },
+    {
+      "id": "sports-field",
+      "osmType": "way",
+      "osmId": 37211518,
+      "name": "Sports Field",
+      "color": "#16a34a",
+      "lat": 38.820492,
+      "lon": -121.29367,
+      "kind": "leisure=pitch",
+      "areaM2": 10213,
+      "hint": "REAL OSM feature. Pitch on the west side (~1 ha). Position is the pitch centroid."
+    }
+  ]
+}
