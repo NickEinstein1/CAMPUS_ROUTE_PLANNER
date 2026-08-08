@@ -11,7 +11,7 @@
       "lon",
       "osmWayId"
     ],
-    "why": "Routing keys off 'id' and the graph node each landmark snaps to. 'name' and 'color' are display-only. Changing them needs no rebuild of the graph - though re-running scripts/build-graph.mjs will carry the new values into campus.json.",
+    "why": "Routing keys off 'id' and the graph node each landmark snaps to. 'name' and 'color' are display-only. Changing them needs no rebuild of the graph - though re-running scripts/build-graph.mjs will carry the new values into campus.json. Entries flagged 'invented' have no OSM feature behind them at all - their coordinates were chosen to sit beside the path network. Move or delete them freely.",
     "hintField": "'hint' describes each building's real position and size on campus, so you can match a name to the right physical building. Entries with an 'osmType'/'kind' field are real named or typed OSM features, not representative guesses."
   },
   "_source": {
@@ -170,6 +170,33 @@
       "kind": "leisure=pitch",
       "areaM2": 10213,
       "hint": "REAL OSM feature. Pitch on the west side (~1 ha). Position is the pitch centroid."
+    },
+    {
+      "id": "dorm-a",
+      "name": "Dorm A",
+      "color": "#7e22ce",
+      "lat": 38.81752,
+      "lon": -121.288583,
+      "invented": true,
+      "hint": "INVENTED position - OpenStreetMap maps no dormitories at Jessup. Placed beside the south-east path corridor, ~360 m from the main cluster."
+    },
+    {
+      "id": "dorm-b",
+      "name": "Dorm B",
+      "color": "#a855f7",
+      "lat": 38.81727,
+      "lon": -121.289053,
+      "invented": true,
+      "hint": "INVENTED position - see Dorm A. ~49 m south-west of Dorm A."
+    },
+    {
+      "id": "dorm-c",
+      "name": "Dorm C",
+      "color": "#c084fc",
+      "lat": 38.81696,
+      "lon": -121.289193,
+      "invented": true,
+      "hint": "INVENTED position - see Dorm A. ~37 m south-west of Dorm B, nearest of the three to the Gymnasium."
     }
   ]
 }
