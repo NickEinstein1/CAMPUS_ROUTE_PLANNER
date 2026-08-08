@@ -95,6 +95,108 @@ Map gives O(1) get/set with string keys, no prototype-chain surprises, and prese
 
 ---
 
+## 1b. Graph theory — questions about *this* graph
+
+Facts, all verified against `data/campus.json`:
+
+| Property | Value |
+|---|---|
+| Order (V) | 164 |
+| Size (E) | 220 |
+| Connected components | **1** — fully connected |
+| Self-loops | 0 |
+| Parallel edges | 0 |
+| Isolated vertices | 0 |
+| Leaf vertices (degree 1) | 23 |
+| Degree sum | 440 = 2E ✓ |
+| Independent cycles (E − V + 1) | **57** |
+| Spanning tree edges (V − 1) | 163 |
+| Density 2E / V(V−1) | 1.65% |
+
+**Q. Is your graph directed or undirected?**
+
+Undirected — a footpath can be walked both ways. In the adjacency list each edge appears twice, once per direction, sharing one edge id. If we modelled one-way stairs or a turnstile it would become a **digraph**, and Dijkstra would need no changes at all.
+
+**Q. Is it a simple graph?**
+
+Yes. **0 self-loops and 0 parallel edges.** The build script enforces both: `if (a !== b && weight > 0)` rejects self-loops, and edges are keyed by a sorted node pair `"a|b"` in a Map, keeping only the shortest when OSM draws two ways between the same junctions.
+
+**Q. What is the order and size?**
+
+Order = |V| = 164 vertices. Size = |E| = 220 edges. (Careful — "size" means edge count in graph theory, not vertex count.)
+
+**Q. Verify the handshake lemma on your graph.**
+
+Sum of all degrees = **440** = 2 × 220 = 2E. ✓ Every edge contributes exactly 2 to the degree sum because it has two endpoints. It also follows that the number of odd-degree vertices must be even.
+
+**Q. Is your graph connected?**
+
+Yes — **exactly 1 connected component**, which is why every one of the 13,366 possible vertex pairs is routable. It was **not** connected when built raw: OSM produced **7 components** (sizes 123, 8, 4, 4, 2, 2, …). We stitch components whose nearest nodes are within 20 m, then keep only the largest, dropping 22 vertices as islands. Filtering *before* snapping landmarks is what prevents a building being attached to an unreachable island.
+
+**Q. Is it a tree?**
+
+No. A tree needs E = V − 1 = 163 edges; we have 220. The excess, **E − V + 1 = 57**, is the **cyclomatic number** — the count of independent cycles. That is a good thing: cycles are alternative routes, and a campus with no cycles would have exactly one path between any two buildings, so no closure could ever be routed around.
+
+**Q. How many edges would a spanning tree have?**
+
+163 (V − 1). We do not compute one — Dijkstra's `prev` map actually *is* a shortest-path tree rooted at the start, spanning every vertex it settled.
+
+**Q. Is your graph sparse or dense? Prove it.**
+
+Sparse. Density = 2E / (V(V−1)) = **1.65%**. A complete graph on 164 vertices would have V(V−1)/2 = 13,366 edges; we have 220. That is the entire justification for the adjacency list.
+
+**Q. What are the 23 leaf vertices?**
+
+Degree-1 dead ends — path stubs that terminate, plus some building access nodes. Dijkstra visits them only if they are the destination, since expanding a leaf yields no new frontier.
+
+**Q. What is the maximum degree, and why so low?**
+
+5. Footpath junctions are physical crossings; more than four or five paths rarely meet at one point on a campus. Average degree is 2.68.
+
+**Q. Adjacency list vs matrix vs edge list — compare all three.**
+
+| Representation | Space | Neighbours of u | Edge (u,v) exists? |
+|---|---|---|---|
+| Adjacency list *(ours)* | O(V + E) = 440 entries | O(deg u) ≈ 2.68 | O(deg u) |
+| Adjacency matrix | O(V²) = 26,896 | O(V) = 164 | **O(1)** |
+| Edge list | O(E) = 220 | O(E) = 220 | O(E) |
+
+Dijkstra's inner loop asks "neighbours of u?" on every settle and never asks "does edge (u,v) exist?" — the one operation the matrix wins. So the list is right for this workload.
+
+**Q. When would you switch to a matrix?**
+
+If the graph were dense (E approaching V²), or if the dominant operation were edge-existence lookup, or for algorithms expressed in matrix terms — Floyd–Warshall, or spectral methods on the adjacency matrix.
+
+**Q. What is an incidence matrix, and would it help?**
+
+A V × E matrix marking which vertices each edge touches — 164 × 220 = 36,080 entries here. Useful in flow and circuit problems; worse than useless for shortest paths.
+
+**Q. BFS vs DFS — did you use either?**
+
+Yes, DFS. The build script uses an **iterative DFS with an explicit stack** to find connected components (`recomputeComponents`). Iterative rather than recursive to avoid stack depth issues, though at 164 nodes recursion would have been fine. BFS would have worked identically for that job — component discovery does not care about visit order.
+
+**Q. How does Dijkstra relate to BFS?**
+
+Dijkstra *is* BFS with a priority queue instead of a FIFO queue. On a graph where every weight is equal they return the same answer. Ours are not equal, so they diverge.
+
+**Q. How would you detect a cycle?**
+
+DFS and look for a back edge to an already-visited vertex that is not the immediate parent. Cheaper here: compare E against V − 1. 220 > 163, so cycles exist — 57 independent ones.
+
+**Q. Is your graph bipartite?**
+
+Almost certainly not — a graph is bipartite iff it has no odd-length cycle, and a road network with triangular junctions will have plenty. It is testable by 2-colouring during BFS, but nothing in this project needs it.
+
+**Q. Walk, trail, path — which does Dijkstra return?**
+
+A **path**: no vertex repeats. That falls out of the algorithm — each vertex is settled once and gets exactly one `prev` entry, so following `prev` backwards cannot revisit a vertex.
+
+**Q. Why a graph rather than a tree or a grid?**
+
+A tree cannot express alternative routes (57 cycles here), and a grid assumes uniform spacing that real footpaths do not have. A weighted graph is the only structure that captures "these places connect, at these real costs."
+
+---
+
 ## 2. Dijkstra
 
 **Q. Explain the algorithm in one sentence.**
