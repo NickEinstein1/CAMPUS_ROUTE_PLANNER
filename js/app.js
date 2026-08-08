@@ -1,11 +1,17 @@
 /**
  * UI controller — renders map, handles clicks, displays route results.
+ *
+ * Connects the graph + Dijkstra backend to the webpage: dropdowns, SVG map,
+ * route highlighting, and the sample output format from the project spec.
+ *
  * Team member: UI
  */
 
+// Build the campus graph once when the page loads.
 const graph = buildCampusGraph();
 const locations = graph.getLocationNodes();
 
+// DOM elements we update when the user interacts with the app.
 const fromSelect = document.getElementById("from-select");
 const toSelect = document.getElementById("to-select");
 const closureSelect = document.getElementById("closure-select");
@@ -18,9 +24,11 @@ const distanceValue = document.getElementById("distance-value");
 const walkValue = document.getElementById("walk-value");
 const consoleOutput = document.getElementById("console-output");
 
-let clickStep = 0; // 0 = next click sets from, 1 = sets to
+// Click-to-select: first click sets "From", second click sets "To", then repeat.
+let clickStep = 0;
 let activeRouteEdges = new Set();
 
+/** Fill From/To dropdowns with campus locations and set default demo route. */
 function populateSelects() {
   for (const loc of locations) {
     fromSelect.append(new Option(loc.label, loc.id));
@@ -34,10 +42,12 @@ function populateSelects() {
   }
 }
 
+/** Draw all roads and nodes on the SVG map. Re-run when closures change. */
 function renderMap() {
   const closedEdges = getClosedEdges(closureSelect.value);
   const edges = getUniqueEdges(graph);
 
+  // Draw grey road lines (red dashed if closed).
   edgesLayer.innerHTML = "";
   for (const edge of edges) {
     const from = graph.getNode(edge.from);
@@ -53,6 +63,7 @@ function renderMap() {
     edgesLayer.appendChild(line);
   }
 
+  // Draw nodes: small grey dots for intersections, green circles for locations.
   nodesLayer.innerHTML = "";
   for (const node of graph.nodes.values()) {
     if (node.type === "intersection") {
@@ -84,6 +95,7 @@ function renderMap() {
   updateNodeSelectionStyles();
 }
 
+/** Highlight selected From (blue) and To (red) on the map. */
 function updateNodeSelectionStyles() {
   document.querySelectorAll(".node-location").forEach((el) => {
     el.classList.remove("selected-from", "selected-to");
@@ -92,6 +104,7 @@ function updateNodeSelectionStyles() {
   });
 }
 
+/** Draw the shortest path in dark blue on top of the map. */
 function highlightRoute(edgeIds) {
   activeRouteEdges = new Set(edgeIds);
   routeLayer.innerHTML = "";
@@ -114,12 +127,14 @@ function highlightRoute(edgeIds) {
   });
 }
 
+/** Remove the highlighted route before computing a new one. */
 function clearRouteHighlight() {
   activeRouteEdges = new Set();
   routeLayer.innerHTML = "";
   edgesLayer.querySelectorAll(".edge.route").forEach((el) => el.classList.remove("route"));
 }
 
+/** Map click handler — alternates setting start and end location. */
 function onNodeClick(nodeId) {
   if (clickStep === 0) {
     fromSelect.value = nodeId;
@@ -131,6 +146,7 @@ function onNodeClick(nodeId) {
   updateNodeSelectionStyles();
 }
 
+/** Main action: run Dijkstra and show distance, walk time, and route on the map. */
 function findRoute() {
   const start = fromSelect.value;
   const end = toSelect.value;
@@ -169,6 +185,7 @@ function findRoute() {
     (closedEdges.size > 0 ? `\n\nNote: ${closedEdges.size} edge(s) closed for this simulation.` : "");
 }
 
+// Wire up UI events.
 fromSelect.addEventListener("change", updateNodeSelectionStyles);
 toSelect.addEventListener("change", updateNodeSelectionStyles);
 closureSelect.addEventListener("change", () => {
@@ -179,6 +196,7 @@ closureSelect.addEventListener("change", () => {
 });
 findRouteBtn.addEventListener("click", findRoute);
 
+// Initial load: show map and run the demo route (Dorm C → Gym).
 populateSelects();
 renderMap();
 findRoute();
