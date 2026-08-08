@@ -1,0 +1,1164 @@
+/* ---------- Shell: nav bar on top, map takes everything else ---------- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.map-shell {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-tile-pane {
+  filter: var(--tile-filter);
+}
+
+/* ---------- Nav bar ---------- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 12px;
+  height: 50px;
+  flex: none;
+  background: var(--panel-solid);
+  border-bottom: 1px solid var(--border);
+  z-index: 1200;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-h);
+  font-size: 15px;
+}
+
+.brand svg {
+  font-size: 19px;
+  color: var(--accent);
+}
+
+.nav-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-actions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 4px;
+}
+
+/* ---------- Shared panel + button styles ---------- */
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.map-shell > .panel,
+.info-pop {
+  position: absolute;
+  z-index: 1000;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  font-size: 17px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: var(--field);
+  border-color: var(--border-strong);
+  color: var(--accent);
+}
+
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.icon-btn.is-active {
+  color: var(--accent);
+  background: var(--field);
+  border-color: var(--accent);
+}
+
+button.primary,
+button.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button.primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+button.primary:hover {
+  filter: brightness(1.1);
+}
+
+button.ghost {
+  background: transparent;
+  border-color: var(--border-strong);
+  color: var(--text-h);
+}
+
+button.ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- Search card (top-left, over the map) ---------- */
+.search-card {
+  top: 12px;
+  left: 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 24px);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.field label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text);
+}
+
+.field select {
+  padding: 8px 10px;
+  min-width: 165px;
+  font-size: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--field);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.icon-btn.swap {
+  margin-bottom: 1px;
+  border-color: var(--border-strong);
+}
+
+.reopen {
+  flex-basis: 100%;
+  justify-content: center;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.reopen:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  filter: brightness(1.15);
+}
+
+/* ---------- Map controls (top-right) ---------- */
+.map-controls {
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  gap: 2px;
+}
+
+/* ---------- Bottom-left stack: output above the result cards ---------- */
+.stack-bl {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: calc(100% - 24px);
+}
+
+.results {
+  padding: 8px;
+  max-width: 100%;
+}
+
+/* ---------- Console output (the format the brief specifies) ---------- */
+.console-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: min(560px, 100%);
+}
+
+.console-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 4px 3px 12px;
+}
+
+.console-panel.is-min .console-bar {
+  border-bottom: none;
+}
+
+.console-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text);
+}
+
+.console-actions {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.console-actions .icon-btn {
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+}
+
+.console {
+  margin: 0;
+  padding: 10px 14px 12px;
+  max-height: 30vh;
+  overflow: auto;
+  border-top: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.console-head {
+  color: #15803d;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .console-head {
+  color: #4ade80;
+}
+
+.console-head--error {
+  color: var(--danger);
+}
+
+.cards {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 12px;
+  min-width: 88px;
+  border-radius: 8px;
+  background: var(--field);
+}
+
+.card-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text);
+}
+
+.card-value {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--text-h);
+}
+
+.card-value small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.results-note {
+  margin: 7px 2px 1px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.results--error {
+  padding: 12px 14px;
+  border-color: var(--danger);
+}
+
+.error-msg {
+  margin: 0;
+  max-width: 340px;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+/* ---------- Legend (bottom-right, clear of the OSM attribution) ---------- */
+.legend {
+  right: 12px;
+  bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 11px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend .key {
+  width: 18px;
+  height: 0;
+  flex: none;
+  border-top-width: 3px;
+  border-top-style: solid;
+}
+
+.key--osm { border-top-color: var(--edge); }
+.key--assumed { border-top-color: var(--assumed); border-top-style: dashed; }
+.key--route { border-top-color: var(--route); border-top-width: 5px; }
+.key--maintenance { border-top-color: var(--maintenance); border-top-width: 4px; }
+.key--construction { border-top-color: var(--construction); border-top-width: 4px; }
+.key--closed { border-top-color: var(--closed); border-top-style: dashed; }
+
+.legend-rule {
+  height: 1px;
+  margin: 1px 0;
+  background: var(--border);
+}
+
+/* ---------- Path condition popup ---------- */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--panel-solid);
+  color: var(--text-h);
+  box-shadow: var(--shadow-lg);
+}
+
+.leaflet-popup-content-wrapper {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.leaflet-popup-content {
+  margin: 10px 12px;
+  font: 13px/1.45 var(--sans);
+}
+
+.edge-pop-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.edge-pop-head span {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+}
+
+.edge-pop-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.chip {
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--field);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: currentColor;
+}
+
+.chip--maintenance { color: var(--maintenance); }
+.chip--construction { color: var(--construction); }
+.chip--closed { color: var(--closed); }
+
+.chip.is-on {
+  border-color: currentColor;
+  border-width: 2px;
+  font-weight: 600;
+}
+
+.chip--open.is-on {
+  color: var(--accent);
+}
+
+.edge-pop-hint {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  color: var(--text);
+}
+
+.edge-pop-cost {
+  margin: 6px 0 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+}
+
+.edge-pop-cost b {
+  color: var(--text-h);
+}
+
+/* ---------- Disruption badges on the map ---------- */
+.disruption-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 50%;
+  background: var(--panel-solid);
+  box-shadow: var(--shadow);
+  /* The tile pane is inverted in dark mode; markers are not, so emoji stay
+     the right way round without extra work. */
+}
+
+.disruption-badge--maintenance { border: 2px solid var(--maintenance); }
+.disruption-badge--construction { border: 2px solid var(--construction); }
+.disruption-badge--closed { border: 2px solid var(--closed); }
+
+.card--impact {
+  background: transparent;
+  border: 1px solid var(--construction);
+}
+
+.card--impact .card-label,
+.card--impact .card-value small {
+  color: var(--construction);
+}
+
+/* ---------- Info popover (under the nav (i) button) ---------- */
+.info-pop {
+  top: 12px;
+  right: 58px;
+  width: 310px;
+  padding: 12px 14px;
+  z-index: 1300;
+}
+
+.info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.info-head .icon-btn {
+  width: 26px;
+  height: 26px;
+  font-size: 14px;
+}
+
+.info-pop ul {
+  margin: 0;
+  padding-left: 17px;
+  font-size: 13px;
+}
+
+.info-pop li {
+  margin-bottom: 5px;
+}
+
+.info-pop b {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.info-foot {
+  margin: 10px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ---------- Notes drawer (right, demo companion) ---------- */
+.drawer {
+  flex: none;
+  width: 0;
+  overflow: hidden;
+  background: var(--panel-solid);
+  border-left: 1px solid var(--border);
+  transition: width 0.28s ease;
+}
+
+.drawer.is-open {
+  width: min(400px, 46vw);
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-head h2 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.drawer-body {
+  height: calc(100% - 51px);
+  overflow-y: auto;
+  padding: 14px 16px 40px;
+  width: min(400px, 46vw);
+}
+
+.drawer-intro {
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+
+.note {
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.note h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.note-file,
+.drawer-intro code {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.note-structure {
+  margin: 5px 0 2px;
+  font-size: 12.5px;
+  color: var(--text-h);
+}
+
+.note-cost {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+}
+
+.note ul,
+.note ol {
+  margin: 8px 0 0;
+  padding-left: 17px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.note li {
+  margin-bottom: 6px;
+}
+
+.note b {
+  color: var(--text-h);
+}
+
+.pipeline {
+  list-style: none;
+  padding-left: 0;
+}
+
+.note-live {
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--field);
+}
+
+.note-live h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--accent);
+}
+
+.note-live dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+}
+
+.note-live dt {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+
+.note-live dd {
+  margin: 1px 0 0;
+  font-size: 16px;
+  color: var(--text-h);
+}
+
+.note-aside {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* ---------- Guide modal ---------- */
+.guide-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(8, 6, 15, 0.55);
+  backdrop-filter: blur(3px);
+  animation: guide-fade 0.16s ease;
+}
+
+@keyframes guide-fade {
+  from { opacity: 0; }
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  width: min(940px, 100%);
+  height: min(88vh, 100%);
+  overflow: hidden;
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  animation: guide-rise 0.18s ease;
+}
+
+@keyframes guide-rise {
+  from { transform: translateY(10px); opacity: 0; }
+}
+
+.guide:focus {
+  outline: none;
+}
+
+.guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px 14px 22px;
+  flex: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-head h1 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+  color: var(--text-h);
+}
+
+.guide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.guide-toc {
+  flex: none;
+  width: 190px;
+  padding: 14px 10px 30px 16px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+}
+
+.guide-toc a {
+  display: block;
+  padding: 6px 10px;
+  margin-bottom: 2px;
+  font-size: 13px;
+  border-radius: 7px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.guide-toc a:hover {
+  background: var(--field);
+  color: var(--accent);
+}
+
+.guide-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 20px 28px 60px;
+}
+
+.guide-main > section {
+  margin-bottom: 40px;
+  scroll-margin-top: 4px;
+}
+
+.guide-main h2 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  font-size: 20px;
+  color: var(--text-h);
+  border-bottom: 2px solid var(--accent);
+}
+
+.guide-main h3 {
+  margin: 26px 0 8px;
+  font-size: 15px;
+  color: var(--text-h);
+}
+
+.guide-main p {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+.guide-main b {
+  color: var(--text-h);
+}
+
+.guide-main code {
+  padding: 1px 5px;
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--field);
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+.code {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-h);
+  white-space: pre;
+}
+
+.callout {
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--field);
+  font-size: 13.5px !important;
+}
+
+.table {
+  width: 100%;
+  margin: 0 0 14px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.table th,
+.table td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+}
+
+.table td {
+  line-height: 1.55;
+}
+
+.table code {
+  white-space: nowrap;
+}
+
+.pipeline-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 9px 12px;
+  padding-right: 26px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--field);
+}
+
+.flow-step b {
+  font-size: 12.5px;
+  color: var(--text-h);
+}
+
+.flow-step span {
+  font-size: 10.5px;
+  color: var(--text);
+}
+
+.flow-arrow {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-style: normal;
+  color: var(--accent);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.meta-grid > div {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.meta-grid dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+}
+
+.meta-grid dd {
+  margin: 2px 0 0;
+  font-size: 18px;
+  color: var(--text-h);
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+
+.swatch--maintenance { background: var(--maintenance); }
+.swatch--construction { background: var(--construction); }
+.swatch--closed { background: var(--closed); }
+
+.guide-foot {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.guide-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .guide-backdrop {
+    padding: 0;
+  }
+
+  .guide {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .guide-toc {
+    display: none;
+  }
+
+  .guide-main {
+    padding: 16px 16px 50px;
+  }
+}
+
+/* ---------- Leaflet vectors ---------- */
+.edge {
+  stroke: var(--edge);
+  stroke-opacity: 0.6;
+  fill: none;
+  cursor: pointer;
+}
+
+.edge:hover {
+  stroke: var(--edge-hover);
+  stroke-opacity: 1;
+}
+
+.edge--assumed {
+  stroke: var(--assumed);
+  stroke-opacity: 0.9;
+  stroke-dasharray: 2 5;
+}
+
+/* Disrupted paths. Maintenance and construction stay solid because the edge is
+   still there — only its cost changed. Closure is dashed: it is gone. */
+.edge--maintenance {
+  stroke: var(--maintenance);
+  stroke-opacity: 0.95;
+  stroke-dasharray: 10 4;
+}
+
+.edge--construction {
+  stroke: var(--construction);
+  stroke-opacity: 0.95;
+  stroke-dasharray: 12 3;
+}
+
+.edge--closed {
+  stroke: var(--closed);
+  stroke-opacity: 0.95;
+  stroke-dasharray: 5 6;
+}
+
+.edge--route {
+  stroke: var(--route);
+  stroke-opacity: 0.92;
+  fill: none;
+  cursor: default;
+}
+
+.landmark {
+  cursor: pointer;
+}
+
+.pin--current {
+  stroke: #15803d;
+  fill: #22c55e;
+  fill-opacity: 0.95;
+}
+
+/* Always-on building labels: Leaflet renders tooltips as HTML, so these are
+   ordinary CSS rules rather than SVG stroke/fill. */
+.leaflet-tooltip {
+  font: 12px/1.3 var(--sans);
+}
+
+.leaflet-tooltip.lm-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  font-weight: 500;
+  color: var(--text-h);
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+
+.leaflet-tooltip.lm-label::before {
+  display: none;
+}
+
+.lm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  flex: none;
+}
+
+.lm-label b {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.lm-label--from {
+  border-color: #15803d;
+  border-width: 2px;
+}
+
+.lm-label--from b {
+  color: #15803d;
+}
+
+.lm-label--to {
+  border-color: #b91c1c;
+  border-width: 2px;
+}
+
+.lm-label--to b {
+  color: #dc2626;
+}
+
+/* Path tooltips follow the cursor — keep them legible in dark mode. */
+.leaflet-tooltip:not(.lm-label) {
+  background: var(--panel-solid);
+  color: var(--text-h);
+  border-color: var(--border-strong);
+}
+
+.leaflet-container {
+  background: var(--bg);
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: var(--panel) !important;
+  color: var(--text) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--accent) !important;
+}
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 760px) {
+  .nav-meta {
+    display: none;
+  }
+
+  .search-card {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+  }
+
+  .field {
+    flex: 1;
+  }
+
+  .field select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .legend {
+    display: none;
+  }
+
+  .stack-bl {
+    right: 12px;
+    max-width: none;
+  }
+
+  .results,
+  .console-panel {
+    width: 100%;
+    max-width: none;
+  }
+
+  .console {
+    max-height: 24vh;
+  }
+
+  .drawer.is-open,
+  .drawer-body {
+    width: 88vw;
+  }
+
+  .drawer.is-open {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    z-index: 1400;
+  }
+}

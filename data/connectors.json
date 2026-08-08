@@ -1,0 +1,79 @@
+{
+ "_comment": "ASSUMED walkways, NOT OpenStreetMap data. OSM maps paths around this campus but not the short links between buildings, so routes were up to 17x longer than the straight-line distance. These connectors close the most glaring gaps. They are drawn as dashed amber lines in the app and flagged \"assumed\": true so they are never mistaken for surveyed data.",
+ "_howToVerify": "Nobody on the team has walked the campus, so these are inferred from geometry alone: each links two points within 35 m of each other that the network routes 120 m+ around, and none crosses a building footprint. Walk the campus and delete any that do not exist.",
+ "_editing": "Delete an entry to remove it. Re-run scripts/build-graph.mjs after any change. Removing this file entirely returns the app to pure OSM data.",
+ "connectors": [
+  {
+   "id": "c0",
+   "from": "n4876748477",
+   "to": "n612757017",
+   "lengthM": 16.9,
+   "replacedNetworkM": 615,
+   "assumed": true,
+   "note": "Assumed walkway. 17 m gap that OSM routes 615 m around."
+  },
+  {
+   "id": "c1",
+   "from": "n13018442470",
+   "to": "n1395774775",
+   "lengthM": 8.5,
+   "replacedNetworkM": 280,
+   "assumed": true,
+   "note": "Assumed walkway. 9 m gap that OSM routes 280 m around."
+  },
+  {
+   "id": "c2",
+   "from": "n12076200128",
+   "to": "n4910633755",
+   "lengthM": 12.7,
+   "replacedNetworkM": 336,
+   "assumed": true,
+   "note": "Assumed walkway. 13 m gap that OSM routes 336 m around."
+  },
+  {
+   "id": "c3",
+   "from": "n12486008194",
+   "to": "n4876748443",
+   "lengthM": 17.2,
+   "replacedNetworkM": 303,
+   "assumed": true,
+   "note": "Assumed walkway. 17 m gap that OSM routes 303 m around."
+  },
+  {
+   "id": "c4",
+   "from": "n13048982230",
+   "to": "n7357808735",
+   "lengthM": 25.9,
+   "replacedNetworkM": 276,
+   "assumed": true,
+   "note": "Assumed walkway. 26 m gap that OSM routes 276 m around."
+  },
+  {
+   "id": "c5",
+   "from": "n12076200073",
+   "to": "n12076200124",
+   "lengthM": 21.2,
+   "replacedNetworkM": 200,
+   "assumed": true,
+   "note": "Assumed walkway. 21 m gap that OSM routes 200 m around."
+  },
+  {
+   "id": "c6",
+   "from": "n12076173923",
+   "to": "n12076200105",
+   "lengthM": 24,
+   "replacedNetworkM": 214,
+   "assumed": true,
+   "note": "Assumed walkway. 24 m gap that OSM routes 214 m around."
+  },
+  {
+   "id": "c7",
+   "from": "n12076200073",
+   "to": "n12076200088",
+   "lengthM": 27.9,
+   "replacedNetworkM": 243,
+   "assumed": true,
+   "note": "Assumed walkway. 28 m gap that OSM routes 243 m around."
+  }
+ ]
+}
