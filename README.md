@@ -5,11 +5,14 @@ A mini Google-Maps-style navigation app for **Jessup University, Rocklin**. It b
 Class assignment: *Route/navigation planner for a city or campus.*
 
 - [PRESENTATION.md](PRESENTATION.md) — concepts, worked trace, and team brief for class
+- [QA.md](QA.md) — ~40 questions a DSA examiner will ask, with answers
 - [DOCS.md](DOCS.md) — pipeline, module APIs, data formats, how to extend
+
+The app also carries its own documentation: a **Guide** modal and a **notes drawer** covering the data structures, the algorithm and how the data is stored.
 
 ## What it does
 
-- Pick **start** and **destination** from 14 campus destinations, or click them on the map
+- Pick **start** and **destination** from 17 campus destinations, or click them on the map
 - Click **open ground** to drop a current position — it snaps to the nearest footpath
 - Click any **path segment** to disrupt it — *maintenance* (×2), *construction* (×5) or *closed* (impassable) — and the route responds immediately
 - Shows distance, walking time, **nodes settled**, and the detour cost versus a clear campus
@@ -25,19 +28,21 @@ npm install
 npm run dev
 ```
 
-Then open <http://localhost:5173>. No API keys, no backend. The graph is pre-built and committed, so the only network request is the map tiles.
+Then open <http://localhost:5173> (Vite picks the next free port if that one is busy). No API keys, no backend. The graph is pre-built and committed, so the only network request is the map tiles.
 
 ## The graph
 
 | | |
 |---|---|
-| Nodes | **156** (junctions + access points + 14 destinations) |
-| Edges | **206** |
-| Path network | **10.2 km** |
+| Nodes | **164** (123 junctions + 24 access points + 17 destinations) |
+| Edges | **220** (212 from OSM + 8 assumed) |
+| Path network | **10.4 km** |
+| Average degree | **2.68** (max 5) |
 | Source | OpenStreetMap, 78 pedestrian/service ways |
-| Assumed connectors | 8, drawn dashed — see below |
 
-A typical query — Library to Gymnasium — walks 518 m in about 7 minutes, settling 128 of 156 nodes. Close one path on that route and it reroutes to 550 m.
+The network is sparse, which is why the graph is an **adjacency list**: a matrix would be 164 × 164 = 26,896 slots to hold 220 edges, over 99% of them empty.
+
+A typical query — Library to Gymnasium — walks 518 m in about 7 minutes, settling 128 of 164 nodes. Close one path on that route and it reroutes to 550 m.
 
 ## An honest note on the data
 
@@ -47,9 +52,15 @@ We closed the worst gaps with 8 **assumed** connectors. Nobody on the team has w
 
 Delete that file and re-run the build for a pure-OpenStreetMap graph.
 
-The 11 **building** names are representative (Library, Gymnasium, Science Hall…), chosen to fit each footprint's real size and position. They are **not** the actual Jessup building names — OSM records none. Rename them freely in `data/landmarks.json`.
+The 17 destinations are not all equally real. In `data/landmarks.json`:
 
-The other three destinations *are* real OSM features and carry their true names and tags: **Crossroads Cafe** (`amenity=restaurant`, with Jessup's own dining page and opening hours), **Main Parking** (`amenity=parking`, 4.5 ha) and the **Sports Field** (`leisure=pitch`, 1 ha). Entries with an `osmType`/`kind` field are the real ones.
+| | Destinations | Basis |
+|---|---|---|
+| **Real feature, real name** | Crossroads Cafe, Main Parking, Sports Field | Tagged in OSM. The cafe carries Jessup's own dining page and opening hours; the lot is 4.5 ha, the pitch 1 ha. Flagged with `osmType`/`kind`. |
+| **Real footprint, invented name** | Library, Gymnasium, Science Hall, and 8 more | The building outlines are real OSM footprints, but OSM records **no names** for them. Ours were chosen to fit each footprint's size and position. |
+| **Invented entirely** | Dorm A, Dorm B, Dorm C | OSM maps **no dormitories** at Jessup — every campus footprint was already spoken for, and the only unused ones nearby are private houses. Positions were chosen beside the south-east path corridor. Flagged `"invented": true`. |
+
+Rename or move any of them freely, then re-run `build-graph.mjs`.
 
 ## Rebuilding the graph
 
