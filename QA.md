@@ -5,6 +5,69 @@ Average degree 2.68, max degree 5. Edge weights range 0.1 m to 1209.8 m.
 
 ---
 
+## 0. How to answer — read this first
+
+All three of us should answer design questions in the same shape. Three beats:
+
+> **1. Name what you rejected. 2. Give the number that decided it. 3. Concede where it flips.**
+
+Most students only manage beat 1. The **number** is what makes it credible. The
+**concession** is what shows you understand a trade-off rather than defending a
+choice you were handed.
+
+### The shape, applied
+
+**Data structure — "why an adjacency list?"**
+
+- *Rejected:* adjacency matrix.
+- *Number:* 164 × 164 = 26,896 slots to hold 220 edges — over 99% empty. Neighbour lookup is O(2.68) instead of O(164).
+- *Concession:* on a dense graph the matrix would win — O(1) edge-existence checks and better cache locality. Ours is sparse, so the list wins.
+
+**Algorithm — "why Dijkstra?"**
+
+- *Rejected:* BFS, A\*, Bellman–Ford.
+- *Number:* BFS is outright wrong here — weights run 0.1 m to 1209.8 m, and our trace shows a 3-edge route (cost 8) beating a 2-edge one (cost 9).
+- *Concession:* **A\* would genuinely be better.** Haversine distance is admissible and consistent, and Dijkstra is A\* with the heuristic set to zero — which is exactly why we settle 128 of 164 nodes rather than fewer.
+
+That concession is the strongest single moment available to us. Volunteering
+that a better algorithm exists, and explaining *precisely* why ours settles more
+nodes, demonstrates more understanding than defending Dijkstra ever could.
+
+**Implementation — "why no decrease-key?"**
+
+- *Rejected:* an indexed heap supporting decrease-key.
+- *Number:* it needs a node → heap-position index maintained on every swap. We push a duplicate and reject it on dequeue instead — 22 stale entries on a typical route.
+- *Concession:* we trade memory (heap bounded by O(E) rather than O(V)) to drop an entire data structure. And we *display* the discard count rather than hiding it.
+
+### When you don't know
+
+Say so, then reason aloud: *"I haven't measured that — but I'd expect X because
+Y, and I'd test it by Z."* Examiners are testing whether we can think, not
+whether we memorised. Bluffing is the only answer that actually fails.
+
+### Two traps specific to this project
+
+**"Did you write this yourselves?"** Answer honestly, then pivot to decisions we
+can defend: why 8 connectors and not 20, why the spatial grid excludes building
+nodes, why closures multiply weights instead of deleting edges. Ownership shows
+in the reasoning, not in the claim.
+
+**"Why is your smallest edge 0.1 m?"** Don't improvise. It is an artefact of
+splitting edges to give buildings their own access nodes; `REUSE_ENDPOINT_M = 3`
+exists to avoid sub-metre stubs and a few slip past. Harmless — but only if it
+comes out in one breath.
+
+### The one habit
+
+End every design answer on a number **from this project**, not from a textbook.
+
+- Weak: *"adjacency lists are better for sparse graphs."*
+- Strong: *"our graph has average degree 2.68 out of 164 possible, so the list stores 440 entries where the matrix would store 26,896."*
+
+The second one is ours, and it pre-empts the follow-up.
+
+---
+
 ## 1. Data structures
 
 **Q. Which data structures did you use, and where?**
