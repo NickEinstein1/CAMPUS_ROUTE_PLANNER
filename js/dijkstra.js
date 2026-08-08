@@ -21,19 +21,16 @@ function dijkstra(graph, startId, endId, closedEdges = new Set()) {
   if (!graph.getNode(startId) || !graph.getNode(endId)) return null;
   if (startId === endId) return { path: [startId], distance: 0, edges: [] };
 
-  // dist[v]  = best known distance from start to v
+  // dist[v]  = best known distance from start to v (initial "distance vector")
   // prev[v]  = which node we came from to reach v (for rebuilding the path)
   // prevEdge = which edge we used to reach v (for highlighting on the map)
-  const dist = new Map();
   const prev = new Map();
   const prevEdge = new Map();
   const pq = new PriorityQueue();
 
-  // Step 1: Initialize all distances to Infinity (unknown / unreachable).
-  for (const id of graph.getAllNodeIds()) {
-    dist.set(id, Infinity);
-  }
-  dist.set(startId, 0);
+  // Step 1: Initial distance matrix/vector — all ∞ except source = 0.
+  // See createInitialDistanceMap() in mapData.js and INITIAL_ADJACENCY_MATRIX.
+  const dist = createInitialDistanceMap(graph, startId);
   pq.enqueue(startId, 0);
 
   // Step 2: Main loop — repeatedly take the closest unprocessed node.

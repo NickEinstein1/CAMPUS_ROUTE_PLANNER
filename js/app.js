@@ -171,6 +171,7 @@ function findRoute() {
 
   const minutes = estimateWalkMinutes(result.distance);
   const pathDesc = formatPathDescription(graph, result.path);
+  const initialDist = createInitialDistanceMap(graph, start);
 
   resultsPanel.hidden = false;
   distanceValue.textContent = `${result.distance} m`;
@@ -178,6 +179,10 @@ function findRoute() {
 
   consoleOutput.innerHTML =
     `<span class="success-text">FINDING THE SHORTEST PATH FROM ${startLabel.toUpperCase()} TO ${endLabel.toUpperCase()} USING DIJKSTRA'S ALGORITHM</span>\n\n` +
+    `Initial adjacency matrix (0 = no direct road; values in meters):\n` +
+    `${formatAdjacencyMatrix(INITIAL_ADJACENCY_MATRIX)}\n\n` +
+    `Initial distance vector (before Dijkstra loop; source = ${startLabel}):\n` +
+    `${formatInitialDistanceVector(initialDist, graph)}\n\n` +
     `Route: ${pathDesc}\n` +
     `Distance: ${result.distance} m\n` +
     `Estimated walk: ${minutes} min\n` +

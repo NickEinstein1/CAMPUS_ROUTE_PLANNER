@@ -7,6 +7,62 @@
  * Team member: Data
  */
 
+/**
+ * Fixed row/column order for the adjacency matrix (7 campus nodes).
+ * Matrix[i][j] = distance in meters from node i to node j (0 = no direct road).
+ */
+const CAMPUS_NODE_ORDER = [
+  "library",
+  "eng_hall",
+  "dorm_c",
+  "gym",
+  "cafeteria",
+  "intersection_upper",
+  "intersection_lower",
+];
+
+/** Short labels for printing the matrix (matches CAMPUS_NODE_ORDER). */
+const CAMPUS_MATRIX_LABELS = [
+  "Library",
+  "Eng Hall",
+  "Dorm C",
+  "Gym",
+  "Cafeteria",
+  "Int Upper",
+  "Int Lower",
+];
+
+/**
+ * Initial adjacency matrix for the campus graph (weights in meters).
+ * Symmetric because every road is walkable both ways.
+ *
+ * Reading the matrix:
+ *   - Rows and columns follow CAMPUS_NODE_ORDER above.
+ *   - Diagonal entries are 0 (distance from a node to itself).
+ *   - 0 off the diagonal means no direct road between those two nodes.
+ *   - A positive number is the edge weight (path length in meters).
+ *
+ * Example: matrix[2][6] = 180 → Dorm C to Lower intersection is 180 m.
+ *
+ *        Lib  Eng  Dorm Gym  Cafe IU   IL
+ * Library [ 0    0  150   0    0  180   0 ]
+ * Eng Hall[ 0    0    0  320    0  180 200 ]
+ * Dorm C  [150   0    0    0    0    0 180 ]
+ * Gym     [ 0  320    0    0  230    0 500 ]
+ * Cafeteria[ 0    0    0  230    0    0 200 ]
+ * Int Upper[180  180    0    0    0    0 140 ]
+ * Int Lower[ 0  200  180  500  200  140   0 ]
+ */
+const INITIAL_ADJACENCY_MATRIX = [
+  [0, 0, 150, 0, 0, 180, 0],
+  [0, 0, 0, 320, 0, 180, 200],
+  [150, 0, 0, 0, 0, 0, 180],
+  [0, 320, 0, 0, 230, 0, 500],
+  [0, 0, 0, 230, 0, 0, 200],
+  [180, 180, 0, 0, 0, 0, 140],
+  [0, 200, 180, 500, 200, 140, 0],
+];
+
 /** Preset closure scenarios for the UI dropdown. */
 /** @type {Array<{ id: string, label: string }>} */
 const CLOSURE_PRESETS = [
@@ -48,6 +104,76 @@ function buildCampusGraph() {
   g.addEdge("eng_hall", "gym", 320, "eng_hall-gym");
 
   return g;
+}
+
+/**
+ * Build an adjacency matrix from the graph (same layout as INITIAL_ADJACENCY_MATRIX).
+ * Useful to verify the live graph matches the documented initial matrix.
+ * @param {Graph} graph
+ * @param {string[]} [nodeOrder=CAMPUS_NODE_ORDER]
+ * @returns {number[][]}
+ */
+function buildAdjacencyMatrixFromGraph(graph, nodeOrder = CAMPUS_NODE_ORDER) {
+  const n = nodeOrder.length;
+  const matrix = Array.from({ length: n }, () => Array(n).fill(0));
+
+  for (let i = 0; i < n; i++) {
+    for (const { to, weight } of graph.getNeighbors(nodeOrder[i])) {
+      const j = nodeOrder.indexOf(to);
+      if (j !== -1) matrix[i][j] = weight;
+    }
+  }
+  return matrix;
+}
+
+/**
+ * Format the adjacency matrix as a readable table string for the output panel.
+ * @param {number[][]} matrix
+ * @param {string[]} [labels=CAMPUS_MATRIX_LABELS]
+ * @returns {string}
+ */
+function formatAdjacencyMatrix(matrix, labels = CAMPUS_MATRIX_LABELS) {
+  const colWidth = 6;
+  const header = "".padStart(colWidth) + labels.map((l) => l.padStart(colWidth)).join("");
+  const rows = matrix.map((row, i) =>
+    labels[i].padEnd(colWidth) + row.map((v) => String(v).padStart(colWidth)).join("")
+  );
+  return [header, ...rows].join("\n");
+}
+
+/**
+ * Initial distance vector for Dijkstra before the main loop runs.
+ * Every node starts at Infinity (unknown); the source is set to 0.
+ * @param {Graph} graph
+ * @param {string} startId
+ * @param {string[]} [nodeOrder=CAMPUS_NODE_ORDER]
+ * @returns {Map<string, number>}
+ */
+function createInitialDistanceMap(graph, startId, nodeOrder = CAMPUS_NODE_ORDER) {
+  const dist = new Map();
+  for (const id of nodeOrder) {
+    if (graph.getNode(id)) dist.set(id, Infinity);
+  }
+  dist.set(startId, 0);
+  return dist;
+}
+
+/**
+ * Format the initial distance vector as a one-column table (for display / debugging).
+ * @param {Map<string, number>} dist
+ * @param {string[]} [nodeOrder=CAMPUS_NODE_ORDER]
+ * @param {Graph} graph
+ * @returns {string}
+ */
+function formatInitialDistanceVector(dist, graph, nodeOrder = CAMPUS_NODE_ORDER) {
+  return nodeOrder
+    .filter((id) => graph.getNode(id))
+    .map((id) => {
+      const label = graph.getNode(id).label || id;
+      const value = dist.get(id) === Infinity ? "∞" : dist.get(id);
+      return `${label.padEnd(16)} ${value}`;
+    })
+    .join("\n");
 }
 
 /**
