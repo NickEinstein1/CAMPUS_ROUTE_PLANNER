@@ -218,8 +218,6 @@ Useful manual checks after a change:
 | Close a stub beside a building | "No route found" — single-access buildings really are cut off |
 | Click open ground far from paths | Green pin snaps to nearest path, console notes the snap distance |
 
-## The original prototype
+## Deployment
 
-`index.html`, `js/`, `css/` at the repo root are the hand-built 7-node version this project started from. It still runs (open `index.html`) and still returns Dorm C → Gym in 610 m.
-
-It is kept deliberately: `PRESENTATION.md` uses it as the small worked example before scaling to 145 real nodes, and it is a working fallback if anything goes wrong on demo day.
+Production hosting targets the React app in `app/` only. Root `vercel.json` runs `npm run build --prefix app` and publishes `app/dist`. The early hand-built 7-node SVG demo was removed so Vercel cannot pick up a stale `index.html` at the repo root. The small worked Dijkstra trace still lives in `PRESENTATION.md` for class.

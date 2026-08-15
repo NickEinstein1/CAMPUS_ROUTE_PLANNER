@@ -30,6 +30,21 @@ npm run dev
 
 Then open <http://localhost:5173> (Vite picks the next free port if that one is busy). No API keys, no backend. The graph is pre-built and committed, so the only network request is the map tiles.
 
+## Deploy on Vercel
+
+The live UI is the React app in `app/` (configured by root `vercel.json`).
+
+1. Push this repo to GitHub.
+2. In [Vercel](https://vercel.com/new), **Import** the `CAMPUS_ROUTE_PLANNER` repo.
+3. Leave settings as detected from `vercel.json` (build: `app`, output: `app/dist`).
+4. Click **Deploy**.
+
+CLI alternative from the repo root:
+
+```bash
+npx vercel
+```
+
 ## The graph
 
 | | |
@@ -95,10 +110,8 @@ CAMPUS_ROUTE_PLANNER/
 │   └── src/components/       MapView, controls, results, Guide, NotesPanel
 ├── scripts/                  OSM fetch + graph build + connector proposal
 ├── data/                     osm-raw, buildings, landmarks, connectors, campus
-├── js/ css/ index.html       original 7-node prototype (kept as a fallback)
+├── vercel.json               Vercel build → app/dist
 └── Project.png               original mockup
 ```
-
-`js/`, `css/` and `index.html` are the hand-built 7-node version the project started from. It still runs — open `index.html` — and the presentation uses it as the small worked example before scaling to real data.
 
 Map data © OpenStreetMap contributors, ODbL 1.0.

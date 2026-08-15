@@ -71,7 +71,7 @@ Small enough to follow on a board. Watch the Gym's number.
 | 7 | **Cafeteria (380)** | **Gym improves 680 → 610** |
 | 8 | **Gym (610)** | Target reached — **stop** |
 
-**Result: 610 m, ~8 min.** *(Still reproducible — open `index.html`.)*
+**Result: 610 m, ~8 min.** *(Board/whiteboard example for class — the live demo uses the real OSM campus in `app/`.)*
 
 **The two moments to point at:**
 
@@ -239,5 +239,5 @@ A* for larger maps. Surveyed distances and real building names from an actual ca
 ### Ground rules
 
 - **Don't read code off the screen.** She's said she doesn't care about it. Talk about ideas; open a file only if asked.
-- **If the demo fails, present the trace table.** The concepts are the grade. The 7-node prototype still runs from `index.html` as a fallback.
+- **If the demo fails, present the trace table.** The concepts are the grade. The 7-node worked example above is the fallback, independent of the live map.
 - **Volunteer the limitations** — the assumed connectors, the invented names, the single-access buildings. Knowing exactly what's weak reads far stronger than pretending nothing is.
